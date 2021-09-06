@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, requrst
+from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 #404 handler
