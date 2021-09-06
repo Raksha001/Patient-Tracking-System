@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, requrst
+from flask import Flask, jsonify, request
+import traceback
 app = Flask(__name__)
 
 #404 handler
@@ -45,6 +46,7 @@ def after_request_func(response):
 
 #endpoints
 from routes import login
+from routes import register
 
 @app.route('/')
 def get_endpoint_function():
