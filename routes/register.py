@@ -89,8 +89,8 @@ def register():
             sql_database(sqlQuery)
             sqlQuery = f"SELECT uid FROM users WHERE username='{username}'"
             uid = sql_database(sqlQuery)
-            print(uid[0])
-            sqlQuery = f"INSERT INTO patient_details (uid, patientName, address, phoneNumber, concern, durationOfTreatment, startDateOfTreatment, doctorInCharge, xray, designFile, lastModified) VALUES ('{uid[0]}','{_name}', '{_address}', '{_phoneNumber}', '{_concern}', '{_durationOfTreatment}', '{_startDateOfTreatment}', '{_doctorInCharge}', '{xrayfilepath}', '{designfilepath}', '{lastModified}')"
+            print(uid["uid"])
+            sqlQuery = f"INSERT INTO patient_details (uid, patientName, address, phoneNumber, concern, durationOfTreatment, startDateOfTreatment, doctorInCharge, xray, designFile, lastModified) VALUES ('{uid["uid"]}','{_name}', '{_address}', '{_phoneNumber}', '{_concern}', '{_durationOfTreatment}', '{_startDateOfTreatment}', '{_doctorInCharge}', '{xrayfilepath}', '{designfilepath}', '{lastModified}')"
             sql_database(sqlQuery)
             return {'status': 'success'}
         else:
@@ -113,9 +113,9 @@ def edituser():
             if _token:
                 sqlQuery = f"SELECT isAdmin FROM users WHERE uid='{_uid}' and authtoken='{_token}'"
                 isAdmin = sql_database(sqlQuery)
-                print(isAdmin[0])
+                print(isAdmin["isAdmin"])
                 if isAdmin:
-                    if isAdmin[0] == 1:
+                    if isAdmin["isAdmin"] == 1:
                         #get details to display
                         _patientuid = request.form['patientuid']
                         sqlQuery = f"SELECT patientName,address,phoneNumber,concern,xray,designFile,durationOfTreatment, startDateOfTreatment,doctorInCharge, isCompleted FROM patient_details WHERE uid='{_patientuid}'"
@@ -142,9 +142,9 @@ def edituser():
             if _token:
                 sqlQuery = f"SELECT isAdmin FROM users WHERE uid='{_uid}' and authtoken='{_token}'"
                 isAdmin = sql_database(sqlQuery)
-                print(isAdmin[0])
+                print(isAdmin["isAdmin"])
                 if isAdmin:
-                    if isAdmin[0] == 1:
+                    if isAdmin["isAdmin"] == 1:
                         #update entries
                         _form = request.form
                         _patientuid = _form['patientuid']
@@ -179,7 +179,7 @@ def edituser():
                 sqlQuery = f"SELECT isAdmin FROM users WHERE uid='{_uid}' and authtoken='{_token}'"
                 isAdmin = sql_database(sqlQuery)
                 if isAdmin:
-                    if isAdmin[0] == 1:
+                    if isAdmin["isAdmin"] == 1:
                         _patientuid = request.form['patientuid']
                         #to delete user details from patient_details, patient_records and users table
                         sqlQuery = f"DELETE from patient_details WHERE uid='{_patientuid}'"
@@ -190,7 +190,7 @@ def edituser():
                         sql_database(sqlQuery)
                         return {'status':'deleted successfully'}
                     else:
-                        return isAdmin[0]
+                        return isAdmin["isAdmin"]
                 else:
                     return {'status':'null'}
             else:

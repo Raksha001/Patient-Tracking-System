@@ -1,6 +1,8 @@
 from app import app, forbidden, internal_server_error
 from db_config import mysql
 from flask import jsonify, request
+import traceback
+
 
 def sql_database(sql_query):
     try:
@@ -18,14 +20,20 @@ def sql_database(sql_query):
 @app.route('/patientprofile', methods=['GET'])
 def patientprofile():
     try:
-        _uid = request.form["uid"]
-        _token = request.form["token"]
+        
+        multi_dict = request.args
+        for key in multi_dict:
+            print(multi_dict.get(key))
+            print(multi_dict.getlist(key))
+        _uid = request.args["uid"]
+        _token = request.args["token"]
         if _token:
             sqlQuery = f"SELECT isAdmin FROM users WHERE authtoken='{_token}'"
+            traceback.print_exc()
             isAdmin = sql_database(sqlQuery)
             print(isAdmin)
             if isAdmin:
-                if isAdmin[0] == 0:
+                if isAdmin["isAdmin"] == 0:
                     sqlQuery = f"SELECT patientName,address,phoneNumber,concern,xray,designFile,durationOfTreatment, startDateOfTreatment,doctorInCharge, isCompleted FROM patient_details WHERE uid='{_uid}'"
                     conn = mysql.connect()
                     cursor = conn.cursor()

@@ -53,6 +53,7 @@ from routes import login
 from routes import register
 from routes import dashboard
 from routes import patientprofile
+from routes import simulation
 
 @app.route('/')
 def get_endpoint_function():

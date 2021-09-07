@@ -24,7 +24,7 @@ def dashboard():
             isAdmin = sql_database(sqlQuery)
             print(isAdmin)
             if isAdmin:
-                if isAdmin[0] == 1:
+                if isAdmin["isAdmin"] == 1:
                     sqlQuery = f"SELECT count(uid) FROM patient_details"
                     patientCount = sql_database(sqlQuery)
                     sqlQuery = f"SELECT count(distinct(doctorInCharge)) FROM patient_details"
