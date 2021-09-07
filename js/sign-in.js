@@ -1,7 +1,6 @@
 function login(){
-    var username = document.getElementById("email").value;
+    var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
-
 
     $.ajax({
         "url": "http://127.0.0.1:5000/login",
@@ -17,26 +16,21 @@ function login(){
     }).done(function (response) {
         console.log(response);
 
-        if(response.status == "success"){
-            localStorage.fullName = response.fullName;
-            localStorage.profilePic = response.profilePic;
-            localStorage.profilePic = response.profilePic;
-            localStorage.profilePic = response.profilePic;
-            localStorage.profilePic = response.profilePic;
-            localStorage.profilePic = response.profilePic;
+        if(response.status == "patient"){
+            localStorage.uid = response.uid;
+            localStorage.token = response.token;
+
+            window.location.replace("viewprofile.html");
+
+        } else if (response.status == "admin"){
+            localStorage.uid = response.uid;
+            localStorage.token = response.token;
 
             window.location.replace("dashboard.html");
-
-        } else {
-            localStorage.fullName = "";
-            localStorage.fullName = "";
-            localStorage.fullName = "";
-            localStorage.fullName = "";
-            localStorage.fullName = "";
-
+        }
+        else {
             window.location.reload();
         }
-
     });
       
 }

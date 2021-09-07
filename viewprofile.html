@@ -37,35 +37,35 @@
                     <div class="row mt-4 py-4 px-4">  
                         <div class="col-md-6">
                             <div class="p-2 bg-light rounded shadow-sm">
-                            <h6 class="my-2">Doctor Incharge - Gautham Menon</h6></div>
+                            <h6 class="my-2">Doctor Incharge: <span id="doctorName"></span></h6></div>
                             <h5 class="my-2">Contact Details</h5>
                             <div class="p-4 rounded shadow-sm">
                                 <h6 class="mb-0">Phone</h6>
-                                <p class="mb-2">+91 78927 16892</p>
+                                <p class="mb-2" id="phone"></p>
                                 <h6 class="mb-0">Address</h6>
-                                <p class="mb-0">Lorem ipsum dolor sit amet, consectetur<br>Lorem ipsum dolor sit amet, consectetur</p>
+                                <p class="mb-0" id="address"></p>
                             </div>
                             <h5 class="my-2">Concern</h5>
                             <div class="p-4 bg-light rounded shadow-sm">
-                                <p class="font-italic mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+                                <p class="font-italic mb-0" id="concern">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
                             </div>
                                 <h5 class="mb-0">Week - 3 Upload</h5>
-                                <div class="my-2"><input type="file" name="fileForm-1" id="week - 3" class="form-control-file mt-2 w-lg-75" placeholder="X-Ray" required></div> 
+                                <div class="my-2"><input type="file" name="fileForm-1" id="currentupload" class="form-control-file mt-2 w-lg-75" placeholder="X-Ray" required></div> 
                         </div>
                         <div class="col-md-6">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h5 class="mb-0">X-Ray and Design Uploads</h5>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6 mb-2 pr-lg-1"><img src="https://images.unsplash.com/photo-1489278353717-f64c6ee8a4d2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="" class="img-fluid rounded shadow-sm"></div>
-                            <div class="col-lg-6 mb-2 pl-lg-1"><img src="https://images.unsplash.com/photo-1489278353717-f64c6ee8a4d2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="" class="img-fluid rounded shadow-sm"></div>
+                            <div class="col-lg-6 mb-2 pr-lg-1" id="xray"><img src="https://images.unsplash.com/photo-1489278353717-f64c6ee8a4d2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="" class="img-fluid rounded shadow-sm"></div>
+                            <div class="col-lg-6 mb-2 pl-lg-1" id="design"><img src="https://images.unsplash.com/photo-1489278353717-f64c6ee8a4d2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="" class="img-fluid rounded shadow-sm"></div>
                         </div>
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h5 class="mb-0">Previous Weeks Uploads</h5>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6 mb-2 pr-lg-1"><img src="https://images.unsplash.com/photo-1489278353717-f64c6ee8a4d2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="" class="img-fluid rounded shadow-sm"></div>
-                            <div class="col-lg-6 mb-2 pl-lg-1"><img src="https://images.unsplash.com/photo-1489278353717-f64c6ee8a4d2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="" class="img-fluid rounded shadow-sm"></div>
+                            <div class="col-lg-6 mb-2 pr-lg-1" id="previousupload"><img src="https://images.unsplash.com/photo-1489278353717-f64c6ee8a4d2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="" class="img-fluid rounded shadow-sm"></div>
+                            <div class="col-lg-6 mb-2 pl-lg-1" ><img src="https://images.unsplash.com/photo-1489278353717-f64c6ee8a4d2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="" class="img-fluid rounded shadow-sm"></div>
                         </div>
                     </div>
                     </div>
@@ -113,9 +113,10 @@
             </div>
           </footer>
     </main>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
-
+    <script src="js/view-profile.js"></script>
 </body>
 
 </html>
