@@ -47,6 +47,7 @@ def after_request_func(response):
 #endpoints
 from routes import login
 from routes import register
+from routes import dashboard
 
 @app.route('/')
 def get_endpoint_function():
