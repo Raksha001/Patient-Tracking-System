@@ -6,10 +6,10 @@ $( document ).ready(function() {
     formdata.append("firstName", document.getElementById('firstName').value);
     formdata.append("lastName", document.getElementById('lastName').value);
     formdata.append("address", document.getElementById('address').value);
-    formdata.append("phone", document.getElementById('phone').value);
+    formdata.append("phoneNumber", document.getElementById('phone').value);
     formdata.append("concern", document.getElementById('concern').value);
-    formdata.append("duration", document.getElementById('duration').value);
-    formdata.append("startdate", document.getElementById('startdate').value);
+    formdata.append("durationOfTreatment", document.getElementById('duration').value);
+    formdata.append("startDateOfTreatment", document.getElementById('startdate').value);
 
     $.ajax({
         "url": "http://127.0.0.1:5000/register",
