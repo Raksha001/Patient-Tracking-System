@@ -1,14 +1,26 @@
-from app import app, forbidden
+from app import app, forbidden, internal_server_error
 from db_config import mysql
 from flask import jsonify, request, redirect
+import string, random
 
-def generate_token(userId):
-    letters = string.ascii_letters + string.digits + string.punctuation
+def generate_token():
+    letters = string.ascii_letters + string.digits
     jumble = ''.join(random.choice(letters) for i in range(22))
-    sql_query = f"INSERT INTO users(authtoken) VALUES('{jumble}') WHERE userId='{userId}'"
-    authoken = cursor.execute(sqlQuery)
-    conn.commit()
     return jumble
+
+def sql_database(sql_query):
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql_query)
+        row = cursor.fetchone()
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return row
+    except Exception as e:
+        print(e)
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -17,37 +29,43 @@ def login():
         _username = _form['username']
         _password = _form['password']
 
-        if _name and _password and request.method == 'POST':
+        if _username and _password and request.method == 'POST':
             # insert record in database
             sqlQuery = f"SELECT uid, isAdmin from users where username='{_username}' and password='{_password}'"
-            conn = mysql.connect()
-            cursor = conn.cursor()
-            cursor.execute(sqlQuery)
-            row = cursor.fetchall()
-            conn.commit()
-            if row:
-                uid = row['uid']
-                isAdmin = row['isAdmin']
-                authtoken = generate_token(uid)
-                cursor.close()
-                conn.close()
+            uid, isAdmin = sql_database(sqlQuery)
+           
+            if uid:
+                authtoken = generate_token()
+                sql_query = f"UPDATE users SET authtoken='{authtoken}' WHERE uid='{uid}'"
+                sql_database(sql_query)
+                
                 if isAdmin == 1:
-                    return {'status':'true','token': authtoken}
+                    return {'status':'admin','token': authtoken}
                 else:
-                    return {'status' : 'false'}
-            status_code = 200
+                    return {'status' : 'patient', 'token': authtoken}
+                status_code = 200
+            else:
+                return {'status':'false'}
+            
         else:
             return forbidden()
     except Exception as e:
         return internal_server_error()
         
 
-@app.route('/logout', methods['POST'])
+@app.route('/logout', methods=['POST'])
 def logout():
     try:
-        _token = request.json["token"]
-        if _token and request.method == 'POST':
-            sqlQuery = f"Delete authtoken from users where authtoken='{token}'"
+        _token = request.form["token"]
+        print(_token)
+        if _token: 
+            sqlQuery = f"Update users set authtoken=null where authtoken='{_token}'"
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.execute(sqlQuery)
+            conn.commit()
+            cursor.close()
+            conn.close()
             return {'status':'true'}
         else:
             return forbidden()
