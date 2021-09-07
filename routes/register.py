@@ -98,10 +98,6 @@ def register():
     except Exception as e:
         return internal_server_error()
 
-@app.route('/uploads/<path:filename>')
-def download_file(filename):
-    return send_from_directory('uploads', filename, as_attachment=True)
-
 @app.route('/user', methods=['GET','PUT','DELETE'])
 def edituser():
     try:

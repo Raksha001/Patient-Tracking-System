@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 import traceback
 app = Flask(__name__)
 
@@ -44,10 +44,15 @@ def after_request_func(response):
     response.headers.add('Access-Control-Allow-Methods',"*")
     return response
 
+@app.route('/uploads/<path:filename>')
+def download_file(filename):
+    return send_from_directory('uploads', filename, as_attachment=True)
+
 #endpoints
 from routes import login
 from routes import register
 from routes import dashboard
+from routes import patientprofile
 
 @app.route('/')
 def get_endpoint_function():
