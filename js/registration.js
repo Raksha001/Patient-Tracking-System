@@ -12,7 +12,7 @@ $( document ).ready(function() {
     formdata.append("startDateOfTreatment", document.getElementById('startdate').value);
 
     $.ajax({
-        "url": "http://127.0.0.1:5000/register",
+        "url": serverUrl+"register",
         "method": "POST",
         "timeout": 0,
         "headers": {

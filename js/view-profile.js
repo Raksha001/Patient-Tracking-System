@@ -2,7 +2,7 @@
 $( document ).ready(function() {
 
     $.ajax({
-        "url": "http://127.0.0.1:5000/patientprofile",
+        "url": serverUrl+"patientprofile",
         "method": "POST",
         "timeout": 0,
         "headers": {
