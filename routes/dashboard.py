@@ -18,10 +18,11 @@ def sql_database(sql_query):
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
     try:
-        _token = request.json["token"]
+        _token = request.form["token"]
         if _token:
-            sqlQuery = f"SELECT isAdmin FROM users WHERE '{_token}'"
+            sqlQuery = f"SELECT isAdmin FROM users WHERE authtoken='{_token}'"
             isAdmin = sql_database(sqlQuery)
+            print(isAdmin)
             if isAdmin:
                 if isAdmin[0] == 1:
                     sqlQuery = f"SELECT count(uid) FROM patient_details"
@@ -32,26 +33,21 @@ def dashboard():
                     completedCount = sql_database(sqlQuery)
                     sqlQuery = f"SELECT count(uid) FROM patient_details WHERE isCompleted=0"
                     liveCount = sql_database(sqlQuery)
-                    sqlQuery = f"SELECT patientName, doctorInCharge, isCompleted, durationOfTreatment FROM patient_details"
+                    sqlQuery = f"SELECT patientName, doctorInCharge, isCompleted, durationOfTreatment, startDateOfTreatment FROM patient_details"
                     conn = mysql.connect()
                     cursor = conn.cursor()
-                    cursor.execute(sql_query)
+                    cursor.execute(sqlQuery)
                     row = cursor.fetchall()
                     conn.commit()
                     cursor.close()
                     conn.close()
                     if row:
-                        res = jsonify(row)
-                        return res
-                    return {'patientCount':patientCount,'doctorCount':doctorCount, 'completedCount':completedCount, 'liveCount':liveCount}
+                        return {'patientCount':patientCount,'doctorCount':doctorCount, 'completedCount':completedCount, 'liveCount':liveCount,'users':row}
                 else:
                     return {'status':'Not admin'}
             else:
-                return {'status': null}
+                return {'status': 'null'}
         else:
             return {'status': 'null token'}
     except Exception as e:
-        return internal_server_error
-
-#file download
-#return redirect(url_for('download_file', name=filename))
+        return internal_server_error()

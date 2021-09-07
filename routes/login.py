@@ -40,9 +40,9 @@ def login():
                 sql_database(sql_query)
                 
                 if isAdmin == 1:
-                    return {'status':'admin','token': authtoken}
+                    return {'status':'admin','token': authtoken, 'uid':uid[0]}
                 else:
-                    return {'status' : 'patient', 'token': authtoken}
+                    return {'status' : 'patient', 'token': authtoken, 'uid':uid}
                 status_code = 200
             else:
                 return {'status':'false'}

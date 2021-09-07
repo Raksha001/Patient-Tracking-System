@@ -7,7 +7,7 @@ import datetime
 import random
 
 UPLOAD_FOLDER = '/mnt/d/projects/Patient-Tracking-System/uploads'
-ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg','PDF','PNG','JPG','JPEG'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg','PNG','JPG','JPEG'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 secretKey= os.urandom(24)
 app.secret_key=secretKey
@@ -15,25 +15,6 @@ app.secret_key=secretKey
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-@app.route('/fileupload', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('download_file', name=filename))
-    return filepath
 
 def sql_database(sql_query):
     try:
@@ -51,6 +32,7 @@ def sql_database(sql_query):
 @app.route('/register',methods=['POST'])
 def register():
     try:
+        ''' POST: Register user details '''
         _form = request.form
         _name = _form['name']
         _address = _form['address']
@@ -75,7 +57,7 @@ def register():
         if _xray and allowed_file(_xray.filename):
             filename = secure_filename(_xray.filename)
             xrayfile = _xray.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            xrayfilepath=os.path.join('/mnt/d/projects/Patient-Tracking-System/uploads', filename)
+            xrayfilepath=os.path.join('uploads', filename)
 
         # check if the post request has the file part
         if 'designFile' not in request.files:
@@ -92,9 +74,10 @@ def register():
         if _designFile and allowed_file(_designFile.filename):
             filename = secure_filename(_designFile.filename)
             designfile = _designFile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            designfilepath=os.path.join('/mnt/d/projects/Patient-Tracking-System/uploads', filename)
+            designfilepath=os.path.join('uploads', filename)
             print(designfilepath)
 
+        #create username and password for patient
         username = _name
         randomnum = random.randrange(10,99)
         password = f'{username}@{randomnum}'
@@ -115,10 +98,49 @@ def register():
     except Exception as e:
         return internal_server_error()
 
-@app.route('/user', methods=['PUT','DELETE'])
+@app.route('/uploads/<path:filename>')
+def download_file(filename):
+    return send_from_directory('uploads', filename, as_attachment=True)
+
+@app.route('/user', methods=['GET','PUT','DELETE'])
 def edituser():
     try:
-        if request.method =='PUT':
+        """ 
+        GET: Display user details for edit
+        PUT: Edit User 
+        DELETE: Deletes User
+        """
+        if request.method == 'GET':
+            _uid = request.form["uid"]
+            _token = request.form["token"]
+
+            if _token:
+                sqlQuery = f"SELECT isAdmin FROM users WHERE uid='{_uid}' and authtoken='{_token}'"
+                isAdmin = sql_database(sqlQuery)
+                print(isAdmin[0])
+                if isAdmin:
+                    if isAdmin[0] == 1:
+                        #get details to display
+                        _patientuid = request.form['patientuid']
+                        sqlQuery = f"SELECT patientName,address,phoneNumber,concern,xray,designFile,durationOfTreatment, startDateOfTreatment,doctorInCharge, isCompleted FROM patient_details WHERE uid='{_patientuid}'"
+                        conn = mysql.connect()
+                        cursor = conn.cursor()
+                        cursor.execute(sqlQuery)
+                        row = cursor.fetchall()
+                        conn.commit()
+                        cursor.close()
+                        conn.close()
+
+                        if row:
+                            return {'userdetails':row}
+                    else:
+                        return {'status':'Not Admin'}
+                else:
+                    return {'status': 'null'}
+            else:
+                return {'status': 'null token'}
+
+        elif request.method =='PUT':
             _uid = request.form["uid"]
             _token = request.form["token"]
             if _token:
@@ -127,6 +149,7 @@ def edituser():
                 print(isAdmin[0])
                 if isAdmin:
                     if isAdmin[0] == 1:
+                        #update entries
                         _form = request.form
                         _patientuid = _form['patientuid']
                         _name = _form['name']
@@ -152,7 +175,7 @@ def edituser():
                     return {'status':'null'}
             else:
                 return {'status': 'token null'}
-
+ 
         elif request.method =='DELETE':
             _uid = request.form["uid"]
             _token = request.form["token"]
@@ -162,7 +185,10 @@ def edituser():
                 if isAdmin:
                     if isAdmin[0] == 1:
                         _patientuid = request.form['patientuid']
-                        sqlQuery = f"DELETE patient_details, patient_records FROM patient_details INNER JOIN ON patient_records ON patient_details.uid=patient_records.uid WHERE patient_details.uid='{_patientuid}'"
+                        #to delete user details from patient_details, patient_records and users table
+                        sqlQuery = f"DELETE from patient_details WHERE uid='{_patientuid}'"
+                        sql_database(sqlQuery)
+                        sqlQuery = f"DELETE from patient_records WHERE uid='{_patientuid}'"
                         sql_database(sqlQuery)
                         sqlQuery = f"DELETE from users WHERE uid='{_patientuid}'"
                         sql_database(sqlQuery)
