@@ -90,7 +90,7 @@ def register():
             sqlQuery = f"SELECT uid FROM users WHERE username='{username}'"
             uid = sql_database(sqlQuery)
             print(uid["uid"])
-            sqlQuery = f"INSERT INTO patient_details (uid, patientName, address, phoneNumber, concern, durationOfTreatment, startDateOfTreatment, doctorInCharge, xray, designFile, lastModified) VALUES ('{uid["uid"]}','{_name}', '{_address}', '{_phoneNumber}', '{_concern}', '{_durationOfTreatment}', '{_startDateOfTreatment}', '{_doctorInCharge}', '{xrayfilepath}', '{designfilepath}', '{lastModified}')"
+            sqlQuery = f"INSERT INTO patient_details (uid, patientName, address, phoneNumber, concern, durationOfTreatment, startDateOfTreatment, doctorInCharge, xray, designFile, lastModified) VALUES ('{uid[0]}','{_name}', '{_address}', '{_phoneNumber}', '{_concern}', '{_durationOfTreatment}', '{_startDateOfTreatment}', '{_doctorInCharge}', '{xrayfilepath}', '{designfilepath}', '{lastModified}')"
             sql_database(sqlQuery)
             return {'status': 'success'}
         else:
