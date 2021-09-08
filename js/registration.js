@@ -25,7 +25,7 @@ $( document ).ready(function() {
             window.location.replace("dashboard.html");
 
         } else {
-            window.location.replace("error.html");
+            window.location.replace("error-404.html");
         }
 
     });

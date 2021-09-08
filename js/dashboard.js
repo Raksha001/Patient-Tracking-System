@@ -22,7 +22,7 @@ $( document ).ready(function() {
             document.getElementById("doctorName").innerHTML = response.users.doctorInCharge;
 
         } else {
-            window.location.replace("error.html");
+            window.location.replace("error-404.html");
         }
 
     });
