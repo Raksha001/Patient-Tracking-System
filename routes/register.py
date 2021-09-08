@@ -21,6 +21,19 @@ def sql_database(sql_query):
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute(sql_query)
+        row = cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return row
+    except Exception as e:
+        print(e)
+
+def sql_database2(sql_query):
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql_query)
         row = cursor.fetchone()
         conn.commit()
         cursor.close()
@@ -28,6 +41,7 @@ def sql_database(sql_query):
         return row
     except Exception as e:
         print(e)
+
 
 @app.route('/register',methods=['POST'])
 def register():
@@ -86,12 +100,12 @@ def register():
         if _name and _address and _phoneNumber and _concern and _durationOfTreatment and _startDateOfTreatment and _doctorInCharge and _xray and _designFile:
             lastModified = datetime.datetime.now()
             sqlQuery = f"INSERT INTO users (username,password) VALUES ('{username}','{password}')"
-            sql_database(sqlQuery)
+            sql_database2(sqlQuery)
             sqlQuery = f"SELECT uid FROM users WHERE username='{username}'"
-            uid = sql_database(sqlQuery)
+            uid = sql_database2(sqlQuery)
             print(uid["uid"])
             sqlQuery = f"INSERT INTO patient_details (uid, patientName, address, phoneNumber, concern, durationOfTreatment, startDateOfTreatment, doctorInCharge, xray, designFile, lastModified) VALUES ('{uid[0]}','{_name}', '{_address}', '{_phoneNumber}', '{_concern}', '{_durationOfTreatment}', '{_startDateOfTreatment}', '{_doctorInCharge}', '{xrayfilepath}', '{designfilepath}', '{lastModified}')"
-            sql_database(sqlQuery)
+            sql_database2(sqlQuery)
             return {'status': 'success'}
         else:
             return {'status': 'false'}
@@ -119,13 +133,7 @@ def edituser():
                         #get details to display
                         _patientuid = request.form['patientuid']
                         sqlQuery = f"SELECT patientName,address,phoneNumber,concern,xray,designFile,durationOfTreatment, startDateOfTreatment,doctorInCharge, isCompleted FROM patient_details WHERE uid='{_patientuid}'"
-                        conn = mysql.connect()
-                        cursor = conn.cursor()
-                        cursor.execute(sqlQuery)
-                        row = cursor.fetchall()
-                        conn.commit()
-                        cursor.close()
-                        conn.close()
+                        row = sql_database(sqlQuery)
 
                         if row:
                             return {'userdetails':row}
@@ -141,7 +149,7 @@ def edituser():
             _token = request.form["token"]
             if _token:
                 sqlQuery = f"SELECT isAdmin FROM users WHERE uid='{_uid}' and authtoken='{_token}'"
-                isAdmin = sql_database(sqlQuery)
+                isAdmin = sql_database2(sqlQuery)
                 print(isAdmin["isAdmin"])
                 if isAdmin:
                     if isAdmin["isAdmin"] == 1:
@@ -161,7 +169,7 @@ def edituser():
                         # startDateOfTreatment missing
                         if _name and _address and _phoneNumber and _concern and _durationOfTreatment and _startDateOfTreatment and _doctorInCharge:
                             sqlQuery = f"UPDATE patient_details SET  patientName='{_name}',address='{_address}',phoneNumber='{_phoneNumber}',concern='{_concern}',durationOfTreatment='{_durationOfTreatment}',startDateOfTreatment='{_startDateOfTreatment}',doctorInCharge='{_doctorInCharge}' WHERE uid='{_patientuid}'"
-                            sql_database(sqlQuery)
+                            sql_database2(sqlQuery)
                             return {'status':'edited successfully'}
                         else:
                             return {'status':'false'}
@@ -177,17 +185,17 @@ def edituser():
             _token = request.form["token"]
             if _uid and _token:
                 sqlQuery = f"SELECT isAdmin FROM users WHERE uid='{_uid}' and authtoken='{_token}'"
-                isAdmin = sql_database(sqlQuery)
+                isAdmin = sql_database2(sqlQuery)
                 if isAdmin:
                     if isAdmin["isAdmin"] == 1:
                         _patientuid = request.form['patientuid']
                         #to delete user details from patient_details, patient_records and users table
                         sqlQuery = f"DELETE from patient_details WHERE uid='{_patientuid}'"
-                        sql_database(sqlQuery)
+                        sql_database2(sqlQuery)
                         sqlQuery = f"DELETE from patient_records WHERE uid='{_patientuid}'"
-                        sql_database(sqlQuery)
+                        sql_database2(sqlQuery)
                         sqlQuery = f"DELETE from users WHERE uid='{_patientuid}'"
-                        sql_database(sqlQuery)
+                        sql_database2(sqlQuery)
                         return {'status':'deleted successfully'}
                     else:
                         return isAdmin["isAdmin"]

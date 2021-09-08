@@ -32,7 +32,8 @@ def login():
         if _username and _password and request.method == 'POST':
             # insert record in database
             sqlQuery = f"SELECT uid, isAdmin from users where username='{_username}' and password='{_password}'"
-            uid, isAdmin = sql_database(sqlQuery)
+            uid, isAdmin = sql_database(sqlQuery).values()
+            print(uid)
            
             if uid:
                 authtoken = generate_token()

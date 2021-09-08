@@ -7,6 +7,19 @@ def sql_database(sql_query):
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute(sql_query)
+        row = cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return row
+    except Exception as e:
+        print(e)
+
+def sql_database2(sql_query):
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql_query)
         row = cursor.fetchone()
         conn.commit()
         cursor.close()
@@ -21,26 +34,20 @@ def dashboard():
         _token = request.form["token"]
         if _token:
             sqlQuery = f"SELECT isAdmin FROM users WHERE authtoken='{_token}'"
-            isAdmin = sql_database(sqlQuery)
+            isAdmin = sql_database2(sqlQuery)
             print(isAdmin)
             if isAdmin:
                 if isAdmin["isAdmin"] == 1:
                     sqlQuery = f"SELECT count(uid) FROM patient_details"
-                    patientCount = sql_database(sqlQuery)
+                    patientCount = sql_database2(sqlQuery)
                     sqlQuery = f"SELECT count(distinct(doctorInCharge)) FROM patient_details"
-                    doctorCount = sql_database(sqlQuery)
+                    doctorCount = sql_database2(sqlQuery)
                     sqlQuery = f"SELECT count(uid) FROM patient_details WHERE isCompleted=1"
-                    completedCount = sql_database(sqlQuery)
+                    completedCount = sql_database2(sqlQuery)
                     sqlQuery = f"SELECT count(uid) FROM patient_details WHERE isCompleted=0"
-                    liveCount = sql_database(sqlQuery)
+                    liveCount = sql_database2(sqlQuery)
                     sqlQuery = f"SELECT patientName, doctorInCharge, isCompleted, durationOfTreatment, startDateOfTreatment FROM patient_details"
-                    conn = mysql.connect()
-                    cursor = conn.cursor()
-                    cursor.execute(sqlQuery)
-                    row = cursor.fetchall()
-                    conn.commit()
-                    cursor.close()
-                    conn.close()
+                    row = sql_database(sqlQuery)
                     if row:
                         return {'status':'admin','patientCount':patientCount,'doctorCount':doctorCount, 'completedCount':completedCount, 'liveCount':liveCount,'users':row}
                 else:
