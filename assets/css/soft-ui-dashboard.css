@@ -18931,8 +18931,8 @@ fieldset:disabled .btn {
 
 .btn-primary:hover,
 .btn.bg-gradient-primary:hover {
-  background-color: #cb0c9f;
-  border-color: #cb0c9f;
+  background-color: #6DD5FA;
+  border-color: #2980B9;
 }
 
 .btn-primary .btn.bg-outline-primary,
@@ -18946,8 +18946,8 @@ fieldset:disabled .btn {
 .btn.bg-gradient-primary:not(:disabled):not(.disabled).active,
 .btn.bg-gradient-primary:not(:disabled):not(.disabled):active,
 .show > .btn.bg-gradient-primary.dropdown-toggle {
-  color: color-yiq(#cb0c9f);
-  background-color: #cb0c9f;
+  color: color-yiq(#6DD5FA);
+  background-color: #2980B9;
 }
 
 .btn-primary.focus,
