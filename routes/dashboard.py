@@ -42,7 +42,7 @@ def dashboard():
                     cursor.close()
                     conn.close()
                     if row:
-                        return {'patientCount':patientCount,'doctorCount':doctorCount, 'completedCount':completedCount, 'liveCount':liveCount,'users':row}
+                        return {'status':'admin','patientCount':patientCount,'doctorCount':doctorCount, 'completedCount':completedCount, 'liveCount':liveCount,'users':row}
                 else:
                     return {'status':'Not admin'}
             else:
